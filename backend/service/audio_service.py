@@ -2,9 +2,10 @@ import librosa
 import numpy as np
 
 from backend.models.preprocess.inference.audio_inference_preprocess import audio_inference_preprocess
+from backend.models.preprocess.train.audio_preprocess.audio_generator import AudioDataGenerator
 from backend.utils.audio_util import extract_audio, split_audio
 
-# extract mfcc, delta, delta2 per segment
+# extract log-mel, delta, delta2 per segment
 def extract_audio_features(video_path):
     try:
         audio_path = extract_audio(video_path)
@@ -18,23 +19,7 @@ def extract_audio_features(video_path):
         audio_features = []
 
         for segment in segments:
-            # mfcc = (19, time_frames)
-            mfcc = librosa.feature.mfcc(y = segment, sr = sr, n_mfcc = 19)
-
-            # delta = rate of change
-            delta = librosa.feature.delta(mfcc)
-
-            # delta2 = acceleration
-            delta2 = librosa.feature.delta(mfcc, order=2)
-
-            # mean across time = (19,) each
-            mfcc_mean = np.mean(mfcc.T, axis=0)
-            delta_mean = np.mean(delta.T, axis=0)
-            delta2_mean = np.mean(delta2.T, axis=0)
-
-            # combine → (57,)
-            feature_vector = np.hstack([mfcc_mean, delta_mean, delta2_mean])
-
+            feature_vector = AudioDataGenerator().process_audio(segment, sr)
             audio_features.append(feature_vector)
 
         audio_features = np.array(audio_features)
@@ -47,6 +32,10 @@ def extract_audio_features(video_path):
 
         return audio_features
 
+    except ValueError as err:
+        print('error : ', err)
+        raise
+
     except Exception as ex:
-        print('Unexpected Error while extracting audio features', ex)
+        print('Unexpected Error while extracting audio features : ', ex)
         raise

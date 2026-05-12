@@ -5,14 +5,14 @@ from tensorflow.keras.utils import Sequence
 
 # convert audio to (log-mel, delta, delta²)
 class AudioDataGenerator(Sequence):
-    def __init__(self, file_paths, labels,
+    def __init__(self, file_paths = None, labels = None,
                  batch_size=32,
                  sr=22050,
                  n_mels=128,
                  max_len=128,
                  shuffle=True):
 
-        self.file_paths = file_paths
+        self.file_paths = file_paths or []
         self.labels = labels
         self.batch_size = batch_size
         self.sr = sr
@@ -36,26 +36,23 @@ class AudioDataGenerator(Sequence):
         batch_paths = [self.file_paths[i] for i in batch_indexes]
         batch_labels = [self.labels[i] for i in batch_indexes]
 
-        X, y = self.__data_generation(batch_paths, batch_labels)
+        X = self.__data_generation(batch_paths)
 
-        return X, np.array(y)
+        return np.array(X), np.array(batch_labels)
 
     # Core function
-    def __data_generation(self, batch_paths, batch_labels):
+    def __data_generation(self, batch_paths):
         X = []
 
         for file_path in batch_paths:
-            spec = self.process_audio(file_path)
+            y, sr = librosa.load(file_path, sr=self.sr) # Loads waveform
+            spec = AudioDataGenerator.process_audio(y, sr)
             X.append(spec)
 
-        return np.array(X), batch_labels
+        return X
 
     # FULL AUDIO PIPELINE
-    def process_audio(self, file_path):
-
-        #  Load
-        y, sr = librosa.load(file_path, sr=self.sr)
-
+    def process_audio(self, y, sr):
         #  Mel Spectrogram
         mel = librosa.feature.melspectrogram(
             y=y,
