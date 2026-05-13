@@ -45,7 +45,7 @@ def image_generator():
         classes = emotion_class
     )
 
-    # saving emotion class mapping for inference
+    # saving emotion class mapping for  inference
     joblib.dump(train_gen.class_indices, image_emotion_class_path)
 
     # load from test dir
