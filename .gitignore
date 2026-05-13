@@ -2,5 +2,3 @@ backend/config.py
 .idea/
 
 # trained models
-backend/models/audio
-backend/models/image
