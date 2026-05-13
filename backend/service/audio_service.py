@@ -1,7 +1,5 @@
-import librosa
 import numpy as np
 
-from backend.models.preprocess.inference.audio_inference_preprocess import audio_inference_preprocess
 from backend.models.preprocess.train.audio_preprocess.audio_generator import AudioDataGenerator
 from backend.utils.audio_util import extract_audio, split_audio
 
@@ -18,16 +16,13 @@ def extract_audio_features(video_path):
 
         audio_features = []
 
+        # extracting audio features
         for segment in segments:
             feature_vector = AudioDataGenerator().process_audio(segment, sr)
             audio_features.append(feature_vector)
 
         audio_features = np.array(audio_features)
         print('audio features shape: ', audio_features.shape)
-
-        # preprocess audio features for model inference
-        audio_features = audio_inference_preprocess(audio_features)
-
         print('Audio features extracted successfully ....')
 
         return audio_features
