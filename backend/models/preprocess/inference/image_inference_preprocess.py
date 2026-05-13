@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 img_size = (256, 256)
 
@@ -23,8 +24,9 @@ def image_preprocess_inference(image_paths):
             # Converting BGR -> RGB
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            # rescaling each image 0-255 -> 0-1
-            img = img.astype("float32") / 255.0
+            # rescaling each image 0-255 -> (-1, 1)
+            img = img.astype("float32")
+            img = preprocess_input(img)
 
             processed.append(img)
 

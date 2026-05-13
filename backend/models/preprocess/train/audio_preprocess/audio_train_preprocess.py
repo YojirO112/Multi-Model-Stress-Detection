@@ -1,7 +1,11 @@
 import os
 
+import joblib
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
+
+from backend.config import audio_encoder_path
+
 
 # loading audio datasets from audio dir
 def load_dataset(dataset_path):
@@ -20,10 +24,13 @@ def load_dataset(dataset_path):
             file_paths.append(os.path.join(emotion_path, file))
             labels.append(emotion)
 
-    # encode labels
+    # encoding labels
     encoder = LabelEncoder()
     y_encoded = encoder.fit_transform(labels)
     y_onehot = to_categorical(y_encoded)
+
+    # saving encoder
+    joblib.dump(encoder, audio_encoder_path)
 
     print('Finished Loading Audio Dataset ....')
 

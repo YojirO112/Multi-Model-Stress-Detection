@@ -141,5 +141,3 @@ def train_image_model():
     except Exception as ex:
         print('Unexpected error while training image model:', ex)
         raise
-
-train_image_model()
