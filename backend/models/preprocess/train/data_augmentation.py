@@ -1,7 +1,8 @@
+import joblib
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
-from backend.config import image_train_dir, image_test_dir
+from backend.config import image_train_dir, image_test_dir, image_emotion_class, image_emotion_class_path
 from backend.utils.emotions_util import get_emotions
 
 img_size  = (256, 256)
@@ -43,6 +44,9 @@ def image_generator():
         class_mode = "categorical",
         classes = emotion_class
     )
+
+    # saving emotion class mapping for inference
+    joblib.dump(train_gen.class_indices, image_emotion_class_path)
 
     # load from test dir
     test_gen = test_datagen.flow_from_directory(
