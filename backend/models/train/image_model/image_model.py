@@ -6,6 +6,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 from sklearn.utils.class_weight import compute_class_weight
 
+from backend.config import image_model_path
 from backend.models.evaluate_model import evaluate_model
 from backend.models.preprocess.train.data_augmentation import image_generator
 from backend.models.train.image_model.CBAM_attention_layer import CBAM
@@ -136,6 +137,9 @@ def train_image_model():
         # Evaluate
         evaluate_model(history)
 
+        model.save(image_model_path) # save model
+
+        print('Image model saved successfully')
         print("Image model training complete ....")
 
     except Exception as ex:
