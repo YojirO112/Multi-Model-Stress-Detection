@@ -25,6 +25,9 @@ def extract_video_features(video_path):
 
         return audio_features, image_features
 
-    except FileNotFoundError as err:
+    except (FileNotFoundError, ValueError) as err:
         print('error: ', err)
+        raise
+    except Exception as ex:
+        print('Unexpected error while extracting video features : ', ex)
         raise
