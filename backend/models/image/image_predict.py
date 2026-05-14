@@ -1,7 +1,9 @@
 import joblib
 import numpy as np
+from tensorflow.python.keras.models import load_model
 
 from backend.config import image_emotion_class_path, image_model_path
+from backend.models.train.image_model.CBAM_attention_layer import CBAM
 
 # image prediction
 def image_prediction(image_features):
@@ -10,8 +12,7 @@ def image_prediction(image_features):
 
         # loading emotion class and model
         emotion_class = joblib.load(image_emotion_class_path)
-        # todo : load model
-        model = joblib.load(image_model_path)
+        model = load_model(image_model_path, custom_objects = {'CBAM': CBAM})
 
         predictions = model.predict(image_features)
 
@@ -27,6 +28,7 @@ def image_prediction(image_features):
             print('emotion : ', emotions[i])
             print('confidence : ', round(confidences[i] * 100, 2), ' % \n\n')
 
+        return predictions
 
     except FileNotFoundError as err:
         print('error : ', err)

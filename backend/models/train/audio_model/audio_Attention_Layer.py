@@ -1,6 +1,5 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Layer, Dense
-import tensorflow.keras.backend as K
 
 class AttentionLayer(Layer):
     def __init__(self):

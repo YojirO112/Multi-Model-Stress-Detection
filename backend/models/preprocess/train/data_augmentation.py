@@ -2,7 +2,7 @@ import joblib
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
-from backend.config import image_train_dir, image_test_dir, image_emotion_class, image_emotion_class_path
+from backend.config import image_train_dir, image_test_dir, image_emotion_class_path
 from backend.utils.emotions_util import get_emotions
 
 img_size  = (256, 256)
