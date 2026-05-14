@@ -155,7 +155,9 @@ def windowed_fusion(audio_vectors, image_vectors, fps = 1, segment_duration = 2)
         emotion_vectors = np.array(emotion_vectors)  # (N_windows, 7)
 
         print(f"\nStress vector   : {stress_vector.round(4)}")
-        # print(f"Emotion vectors : {emotion_vectors.shape}")
+        print(f"Emotion vectors : {emotion_vectors.shape}")
+
+        return stress_vector
 
     except Exception as ex:
         print('Unexpected error while executing windowed_fusion: ', ex)

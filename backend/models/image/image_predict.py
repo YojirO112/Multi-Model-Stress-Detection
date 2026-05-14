@@ -28,6 +28,7 @@ def image_prediction(image_features):
             print('emotion : ', emotions[i])
             print('confidence : ', round(confidences[i] * 100, 2), ' % \n\n')
 
+        return predictions
 
     except FileNotFoundError as err:
         print('error : ', err)
