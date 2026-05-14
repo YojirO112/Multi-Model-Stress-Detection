@@ -1,7 +1,9 @@
 import joblib
 import numpy as np
+from tensorflow.python.keras.models import load_model
 
-from backend.config import audio_encoder_path, audio_model
+from backend.config import audio_encoder_path, audio_model_path
+from backend.models.train.audio_model.audio_Attention_Layer import AttentionLayer
 
 # audio prediction
 def audio_prediction(audio_features):
@@ -10,8 +12,7 @@ def audio_prediction(audio_features):
 
         # load saved encoder and model
         encoder = joblib.load(audio_encoder_path)
-        # todo : load model
-        model = joblib.load(audio_model)
+        model = load_model(audio_model_path, custom_objects = {'AttentionLayer': AttentionLayer})
 
         predictions = model.predict(audio_features)
 

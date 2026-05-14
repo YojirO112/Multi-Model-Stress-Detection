@@ -140,7 +140,7 @@ def train_image_model():
         model.save(image_model_path) # save model
 
         print('Image model saved successfully')
-        print("Image model training complete ....")
+        print("Image model training completed ....")
 
     except Exception as ex:
         print('Unexpected error while training image model:', ex)

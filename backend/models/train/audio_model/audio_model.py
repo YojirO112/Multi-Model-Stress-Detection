@@ -7,7 +7,7 @@ from tensorflow.keras.regularizers import l2
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
 from tensorflow.keras import models, layers, regularizers
 
-from backend.config import audio_dir
+from backend.config import audio_dir, audio_model_path
 from backend.models.evaluate_model import evaluate_model
 from backend.models.preprocess.train.audio_preprocess.audio_generator import AudioDataGenerator
 from backend.models.preprocess.train.audio_preprocess.audio_train_preprocess import load_dataset
@@ -55,90 +55,101 @@ def build_model(input_shape, num_classes):
     return model, base_model
 
 def train_model():
-    print('Starting Training Audio Model ....')
+    try:
+        print('Starting Training Audio Model ....')
 
-    #  Load Data
-    file_paths, y_onehot, y_encoded = load_dataset(audio_dir)
+        #  Load Data
+        file_paths, y_onehot, y_encoded = load_dataset(audio_dir)
 
-    X_train_paths, X_test_paths, y_train, y_test = train_test_split(
-        file_paths, y_onehot,
-        test_size=0.2,
-        stratify=y_encoded,
-        random_state=42
-    )
+        X_train_paths, X_test_paths, y_train, y_test = train_test_split(
+            file_paths, y_onehot,
+            test_size=0.2,
+            stratify=y_encoded,
+            random_state=42
+        )
 
-    #  Generators
-    train_gen = AudioDataGenerator(X_train_paths, y_train)
-    test_gen = AudioDataGenerator(X_test_paths, y_test)
+        #  Generators
+        train_gen = AudioDataGenerator(X_train_paths, y_train)
+        test_gen = AudioDataGenerator(X_test_paths, y_test)
 
-    #  Class Weights
-    y_labels = np.argmax(y_train, axis=1)
-    class_weights = compute_class_weight(
-        class_weight='balanced',
-        classes=np.unique(y_labels),
-        y=y_labels
-    )
-    class_weights = dict(enumerate(class_weights))
+        #  Class Weights
+        y_labels = np.argmax(y_train, axis=1)
+        class_weights = compute_class_weight(
+            class_weight='balanced',
+            classes=np.unique(y_labels),
+            y=y_labels
+        )
+        class_weights = dict(enumerate(class_weights))
 
-    # input
-    input_shape = (128, 128, 3)
-    num_classes = y_train.shape[1]
+        # input
+        input_shape = (128, 128, 3)
+        num_classes = y_train.shape[1]
 
-    model, base_model = build_model(input_shape, num_classes)
+        model, base_model = build_model(input_shape, num_classes)
 
-    # Callbacks
-    early_stop = EarlyStopping(
-        monitor='val_loss',
-        patience=8,
-        min_delta=1e-4,
-        restore_best_weights=False,
-        verbose=1
-    )
+        # Callbacks
+        early_stop = EarlyStopping(
+            monitor='val_loss',
+            patience=8,
+            min_delta=1e-4,
+            restore_best_weights=False,
+            verbose=1
+        )
 
-    lr_scheduler = ReduceLROnPlateau(
-        monitor='val_loss',
-        factor=0.2,
-        patience=4,
-        cooldown=2,
-        min_lr=1e-6,
-        verbose=1
-    )
+        lr_scheduler = ReduceLROnPlateau(
+            monitor='val_loss',
+            factor=0.2,
+            patience=4,
+            cooldown=2,
+            min_lr=1e-6,
+            verbose=1
+        )
 
-    print('Phase 1: Training Head (Frozen CNN)')
+        print('Phase 1: Training Head (Frozen CNN)')
 
-    # PHASE 1
-    model.compile(
-        optimizer='adam',
-        loss='categorical_crossentropy',
-        metrics=['accuracy']
-    )
+        # PHASE 1
+        model.compile(
+            optimizer='adam',
+            loss='categorical_crossentropy',
+            metrics=['accuracy']
+        )
 
-    model.fit(
-        train_gen,
-        validation_data=test_gen,
-        epochs=15,
-        class_weight=class_weights,
-        callbacks=[early_stop, lr_scheduler]
-    )
+        model.fit(
+            train_gen,
+            validation_data=test_gen,
+            epochs=15,
+            class_weight=class_weights,
+            callbacks=[early_stop, lr_scheduler]
+        )
 
-    print('Phase 2: Fine-Tuning CNN')
+        print('Phase 2: Fine-Tuning CNN')
 
-    # UNFREEZE TOP LAYERS
-    for layer in base_model.layers[-40:]:
-        layer.trainable = True
+        # UNFREEZE TOP LAYERS
+        for layer in base_model.layers[-40:]:
+            layer.trainable = True
 
-    model.compile(
-        optimizer='adam',
-        loss='categorical_crossentropy',
-        metrics=['accuracy']
-    )
+        model.compile(
+            optimizer='adam',
+            loss='categorical_crossentropy',
+            metrics=['accuracy']
+        )
 
-    history = model.fit(
-        train_gen,
-        validation_data=test_gen,
-        epochs=25,
-        class_weight=class_weights,
-        callbacks=[early_stop, lr_scheduler]
-    )
+        history = model.fit(
+            train_gen,
+            validation_data=test_gen,
+            epochs=25,
+            class_weight=class_weights,
+            callbacks=[early_stop, lr_scheduler]
+        )
 
-    evaluate_model(history)
+        # Evaluate
+        evaluate_model(history)
+
+        model.save(audio_model_path)  # save model
+
+        print('Audio model saved successfully')
+        print("Audio model training completed ....")
+
+    except Exception as ex:
+        print('Unexpected error while training audio model:', ex)
+        raise
