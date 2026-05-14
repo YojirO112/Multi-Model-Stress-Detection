@@ -7,7 +7,7 @@ from backend.service.image_service import extract_image_features
 from backend.utils.video_util import allowed_file
 
 # extract video features (images + audio)
-def extract_video_features(video_path):
+def extract_image_and_audio_features(video_path):
     try:
         if not video_path:
             raise FileNotFoundError('No file provided')
@@ -39,7 +39,7 @@ def extract_video_features(video_path):
 # handles multimodal inference by processing image and audio features and performing fusion prediction.
 def process_video_emotion_pipeline():
     # extracts features as well as preprocessing
-    audio_features, image_features = extract_video_features(video_store_dir)
+    audio_features, image_features = extract_image_and_audio_features(video_store_dir)
 
     # predict both audio and image model
     audio_vectors = audio_prediction(audio_features)

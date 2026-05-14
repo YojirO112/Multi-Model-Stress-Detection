@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import entropy
 
-from backend.service.emotion_service import emotion_vector_to_stress
+from backend.service.stress_service import emotion_vector_to_stress
 from backend.utils.emotions_util import get_emotions
 
 # calculate entropy of model to know its certainty
