@@ -3,25 +3,25 @@ image_train_dir = r"---- provide path here ----"
 image_test_dir = r"---- provide path here ----"
 
 # audio train dir
-audio_dir = r"---- provide path of csv file here ----"
+audio_dir = r"---- provide path of audio dir here ----"
 
-# video dir for storage
-video_store_dir = r"---- provide path here ----"
+# video path for processing
+video_store_path = r"---- provide path of video file here ----"
 
-# audio dir for storage
+# audio dir for storing
 audio_store_dir = r"---- provide path here ----"
 
-# image dir for storage
+# image dir for storing
 image_store_dir = r"---- provide path here ----"
 
 # saved audio model after training
-audio_model = r"---- provide audio saving model path here ----"
+audio_model_path = r"---- provide audio saving keras model path here ----"
 
 # saved image model after training
-image_model = r"---- provide image saving model path here ----"
-
-# trained audio scalar path for model inference
-audio_scaler_path = r"---- provide trained scaler path here for inference ----"
+image_model_path = r"---- provide image saving keras model path here ----"
 
 # trained label encoder path for model inference
-audio_encoder_path = r"---- provide encoder path here for inference ----"
+audio_encoder_path = r"---- provide trained scaler pkl path here for audio model inference ----"
+
+# trained emotion class for model inference
+image_emotion_class_path = r"---- provide image emotion class pkl path for image model inference ----"

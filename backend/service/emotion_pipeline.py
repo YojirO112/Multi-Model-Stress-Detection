@@ -1,6 +1,6 @@
 import numpy as np
 
-from backend.config import video_store_dir
+from backend.config import video_store_path
 from backend.models.audio.audio_predict import audio_prediction
 from backend.models.image.image_predict import image_prediction
 from backend.service.audio_service import extract_audio_features
@@ -41,7 +41,7 @@ def extract_image_and_audio_features(video_path):
 # handles multimodal inference by processing image and audio features and performing fusion prediction.
 def process_video_emotion_pipeline():
     # extracts features as well as preprocessing
-    audio_features, image_features = extract_image_and_audio_features(video_store_dir)
+    audio_features, image_features = extract_image_and_audio_features(video_store_path)
 
     # predict both audio and image model
     audio_vectors = audio_prediction(audio_features)
