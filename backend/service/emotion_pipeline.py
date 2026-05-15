@@ -1,3 +1,5 @@
+import numpy as np
+
 from backend.config import video_store_dir
 from backend.models.audio.audio_predict import audio_prediction
 from backend.models.image.image_predict import image_prediction
@@ -6,7 +8,7 @@ from backend.service.fusion_service import windowed_fusion
 from backend.service.image_service import extract_image_features
 from backend.utils.video_util import allowed_file
 
-# extract video features (images + audio)
+# extract images and audio features from video
 def extract_image_and_audio_features(video_path):
     try:
         if not video_path:
@@ -46,6 +48,30 @@ def process_video_emotion_pipeline():
     image_vectors = image_prediction(image_features)
 
     # apply fusion to get stress scores
-    stress_scores = windowed_fusion(audio_vectors, image_vectors)
+    stress_vector = windowed_fusion(audio_vectors, image_vectors)
 
-    # todo : strategy to map scores to stress levels
+    # final stress score and mapping
+    stress_score, stress_level = map_stress_level(stress_vector)
+
+    print('\nStress score: ', stress_score)
+    print('\nStress level: ', stress_level)
+
+# calculates final stress score and maps it
+def map_stress_level(stress_vector):
+    stress_vector = np.array(stress_vector)
+
+    # smooth noise
+    stress_vector = np.clip(stress_vector, 0, 1)
+
+    # aggregate
+    stress_score = (0.7 * np.mean(stress_vector) + 0.3 * np.max(stress_vector))
+
+    # map level
+    if stress_score < 0.4:
+        stress_level = 'LOW'
+    elif stress_score < 0.7:
+        stress_level =  'MEDIUM'
+    else:
+        stress_level = 'HIGH'
+
+    return stress_score, stress_level
