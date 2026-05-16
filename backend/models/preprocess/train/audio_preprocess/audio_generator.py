@@ -46,7 +46,7 @@ class AudioDataGenerator(Sequence):
 
         for file_path in batch_paths:
             y, sr = librosa.load(file_path, sr=self.sr) # Loads waveform
-            spec = AudioDataGenerator.process_audio(y, sr)
+            spec = self.process_audio(y, sr)
             X.append(spec)
 
         return X
