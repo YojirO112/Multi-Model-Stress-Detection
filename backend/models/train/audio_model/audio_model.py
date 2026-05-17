@@ -6,6 +6,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
 from tensorflow.keras import models, layers, regularizers
+from tensorflow.keras.optimizers import Adam
 
 from backend.config import audio_dir, audio_model_path
 from backend.models.evaluate_model import evaluate_model
@@ -109,7 +110,7 @@ def train_model():
 
         # PHASE 1
         model.compile(
-            optimizer='adam',
+            optimizer = Adam(learning_rate=1e-3),
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
@@ -129,7 +130,7 @@ def train_model():
             layer.trainable = True
 
         model.compile(
-            optimizer='adam',
+            optimizer = Adam(learning_rate=1e-5),
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
