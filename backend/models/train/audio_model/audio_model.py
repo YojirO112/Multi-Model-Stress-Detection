@@ -6,7 +6,6 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
 from tensorflow.keras import models, layers, regularizers
-from tensorflow.keras.optimizers import Adam
 
 from backend.config import audio_dir, audio_model_path
 from backend.models.evaluate_model import evaluate_model
@@ -33,19 +32,19 @@ def build_model(input_shape, num_classes):
     x = AttentionLayer()(x)
 
     #  Dense Head
-    x = layers.Dense(256,
+    x = layers.Dense(128,
                      kernel_initializer='he_normal',
                      kernel_regularizer=l2(l2_reg))(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
-    x = layers.Dropout(0.5)(x)
+    x = layers.Dropout(0.3)(x)
 
-    x = layers.Dense(128,
+    x = layers.Dense(64,
                      kernel_initializer='he_normal',
                      kernel_regularizer=regularizers.l2(l2_reg))(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
-    x = layers.Dropout(0.4)(x)
+    x = layers.Dropout(0.2)(x)
 
     outputs = layers.Dense(num_classes,
                            activation='softmax',
@@ -92,16 +91,14 @@ def train_model():
         early_stop = EarlyStopping(
             monitor='val_loss',
             patience=8,
-            min_delta=1e-4,
-            restore_best_weights=False,
+            restore_best_weights=True,
             verbose=1
         )
 
         lr_scheduler = ReduceLROnPlateau(
             monitor='val_loss',
-            factor=0.2,
-            patience=4,
-            cooldown=2,
+            factor=0.5,
+            patience=3,
             min_lr=1e-6,
             verbose=1
         )
@@ -110,7 +107,7 @@ def train_model():
 
         # PHASE 1
         model.compile(
-            optimizer = Adam(learning_rate=1e-3),
+            optimizer = 'adam',
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
@@ -127,10 +124,11 @@ def train_model():
 
         # UNFREEZE TOP LAYERS
         for layer in base_model.layers[-40:]:
-            layer.trainable = True
+            if not isinstance(layer, layers.BatchNormalization):
+                layer.trainable = True
 
         model.compile(
-            optimizer = Adam(learning_rate=1e-5),
+            optimizer = 'adam',
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
@@ -138,7 +136,7 @@ def train_model():
         history = model.fit(
             train_gen,
             validation_data=test_gen,
-            epochs=25,
+            epochs=30,
             class_weight=class_weights,
             callbacks=[early_stop, lr_scheduler]
         )
