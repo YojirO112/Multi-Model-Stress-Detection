@@ -5,7 +5,6 @@ from tensorflow.keras import models, layers, regularizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 from sklearn.utils.class_weight import compute_class_weight
-from tensorflow.keras.optimizers import Adam
 
 from backend.config import image_model_path
 from backend.models.evaluate_model import evaluate_model
@@ -89,7 +88,7 @@ def train_image_model():
             ),
             ReduceLROnPlateau(
                 monitor="val_loss",
-                factor=0.2,
+                factor=0.5,
                 patience=4,
                 cooldown=2,
                 min_lr=1e-6,
@@ -101,7 +100,7 @@ def train_image_model():
         print("Phase 1: Training Head (Frozen Backbone)")
 
         model.compile(
-            optimizer = Adam(learning_rate=1e-3),
+            optimizer = 'adam',
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
@@ -122,7 +121,7 @@ def train_image_model():
             layer.trainable = True
 
         model.compile(
-            optimizer = Adam(learning_rate=1e-5),
+            optimizer = 'adam',
             loss='categorical_crossentropy',
             metrics=['accuracy']
         )
