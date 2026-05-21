@@ -6,7 +6,7 @@ from tensorflow.keras.utils import Sequence
 # convert audio to (log-mel, delta, delta²)
 class AudioDataGenerator(Sequence):
     def __init__(self, file_paths = None, labels = None,
-                 batch_size=32,
+                 batch_size=16,
                  sr=22050,
                  n_mels=128,
                  max_len=128,
