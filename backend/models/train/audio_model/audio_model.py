@@ -6,6 +6,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
 from tensorflow.keras import models, layers, regularizers
+from tensorflow.keras.losses import CategoricalCrossentropy
 
 from backend.config import audio_dir, audio_model_path
 from backend.models.evaluate_model import evaluate_model
@@ -108,14 +109,14 @@ def train_model():
         # PHASE 1
         model.compile(
             optimizer = 'adam',
-            loss='categorical_crossentropy',
+            loss = CategoricalCrossentropy(label_smoothing=0.1),
             metrics=['accuracy']
         )
 
         model.fit(
             train_gen,
             validation_data=test_gen,
-            epochs=15,
+            epochs=25,
             class_weight=class_weights,
             callbacks=[early_stop, lr_scheduler]
         )
@@ -129,14 +130,14 @@ def train_model():
 
         model.compile(
             optimizer = 'adam',
-            loss='categorical_crossentropy',
+            loss = CategoricalCrossentropy(label_smoothing=0.1),
             metrics=['accuracy']
         )
 
         history = model.fit(
             train_gen,
             validation_data=test_gen,
-            epochs=30,
+            epochs=50,
             class_weight=class_weights,
             callbacks=[early_stop, lr_scheduler]
         )
