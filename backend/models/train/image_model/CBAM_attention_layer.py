@@ -1,9 +1,11 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Layer, Dense, Conv2D
+from tensorflow.keras.utils import register_keras_serializable
 
+@register_keras_serializable()
 class CBAM(Layer):
-    def __init__(self, reduction_ratio=8):
-        super(CBAM, self).__init__()
+    def __init__(self, reduction_ratio=8, **kwargs):
+        super(CBAM, self).__init__(**kwargs)
         self.reduction_ratio = reduction_ratio
 
     def build(self, input_shape):
@@ -44,3 +46,12 @@ class CBAM(Layer):
         x = x * spatial_attention
 
         return x
+
+    def get_config(self):
+        config = super().get_config()
+
+        config.update({
+            "reduction_ratio": self.reduction_ratio
+        })
+
+        return config
