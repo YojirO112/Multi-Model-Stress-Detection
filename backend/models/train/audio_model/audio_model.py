@@ -64,7 +64,7 @@ def train_model():
 
         X_train_paths, X_test_paths, y_train, y_test = train_test_split(
             file_paths, y_onehot,
-            test_size=0.2,
+            test_size=0.5,
             stratify=y_encoded,
             random_state=42
         )

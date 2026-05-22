@@ -1,6 +1,6 @@
 import joblib
 import numpy as np
-from tensorflow.python.keras.models import load_model
+from tensorflow.keras.models import load_model
 
 from backend.config import image_emotion_class_path, image_model_path
 from backend.models.train.image_model.CBAM_attention_layer import CBAM
@@ -12,7 +12,9 @@ def image_prediction(image_features):
 
         # loading emotion class and model
         emotion_class = joblib.load(image_emotion_class_path)
-        model = load_model(image_model_path, custom_objects = {'CBAM': CBAM})
+        model = load_model(image_model_path,
+                           custom_objects = {'CBAM': CBAM},
+                           compile = False)
 
         predictions = model.predict(image_features)
 

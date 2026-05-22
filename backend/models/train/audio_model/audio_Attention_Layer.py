@@ -1,9 +1,11 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Layer, Dense
+from tensorflow.keras.utils import register_keras_serializable
 
+@register_keras_serializable()
 class AttentionLayer(Layer):
-    def __init__(self):
-        super(AttentionLayer, self).__init__()
+    def __init__(self, **kwargs):
+        super(AttentionLayer, self).__init__(**kwargs)
         self.dense1 = Dense(128, activation='relu')
         self.dense2 = Dense(1)
 
@@ -20,3 +22,7 @@ class AttentionLayer(Layer):
         context = tf.reduce_sum(context, axis=1)
 
         return context
+
+    def get_config(self):
+        config = super().get_config()
+        return config

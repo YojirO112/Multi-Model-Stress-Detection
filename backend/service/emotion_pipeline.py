@@ -20,13 +20,13 @@ def extract_image_and_audio_features(video_path):
         # audio_features
         audio_features = extract_audio_features(video_path)
 
-        if not audio_features:
+        if audio_features is None or len(audio_features) == 0:
             raise ValueError('Audio features extraction failed')
 
         # image_features
         image_features = extract_image_features(video_path)
 
-        if not image_features:
+        if image_features is None or len(image_features) == 0:
             raise ValueError('Image features extraction failed')
 
         return audio_features, image_features
