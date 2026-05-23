@@ -64,7 +64,7 @@ def train_model():
 
         X_train_paths, X_test_paths, y_train, y_test = train_test_split(
             file_paths, y_onehot,
-            test_size=0.5,
+            test_size=0.2,
             stratify=y_encoded,
             random_state=42
         )
@@ -116,7 +116,7 @@ def train_model():
         model.fit(
             train_gen,
             validation_data=test_gen,
-            epochs=25,
+            epochs = 40,
             class_weight=class_weights,
             callbacks=[early_stop, lr_scheduler]
         )
@@ -137,13 +137,13 @@ def train_model():
         history = model.fit(
             train_gen,
             validation_data=test_gen,
-            epochs=50,
+            epochs=80,
             class_weight=class_weights,
             callbacks=[early_stop, lr_scheduler]
         )
 
         # Evaluate
-        evaluate_model(history)
+        evaluate_model(history, model, test_gen, np.argmax(y_test, axis=1))
 
         model.save(audio_model_path)  # save model
 
@@ -153,3 +153,5 @@ def train_model():
     except Exception as ex:
         print('Unexpected error while training audio model:', ex)
         raise
+
+train_model()
