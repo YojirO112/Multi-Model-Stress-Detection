@@ -135,7 +135,8 @@ def train_image_model():
         )
 
         # Evaluate
-        evaluate_model(history)
+        test_gen.reset()
+        evaluate_model(history, model, test_gen, test_gen.classes)
 
         model.save(image_model_path) # save model
 
