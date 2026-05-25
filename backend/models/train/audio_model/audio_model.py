@@ -153,5 +153,3 @@ def train_model():
     except Exception as ex:
         print('Unexpected error while training audio model:', ex)
         raise
-
-train_model()
