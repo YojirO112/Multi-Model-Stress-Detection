@@ -39,14 +39,18 @@ def audio_prediction(audio_features):
         print('Unexpected Error during audio inference : ', ex)
         raise
 
-def arrange_array(vector):
-    vector = [
-        vector[0],
-        vector[1],
-        vector[2],
-        vector[3],
-        vector[5],  # sad
-        vector[4],  # neutral
+def arrange_array(vectors):
+    arranged = []
+    for vector in vectors:
+        new_vector = [
+            vector[0],
+            vector[1],
+            vector[2],
+            vector[3],
+            vector[5],  # sad
+            vector[4],  # neutral
     ]
+
+        arranged.append(new_vector)
 
     return vector
