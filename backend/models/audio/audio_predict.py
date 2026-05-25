@@ -16,7 +16,7 @@ def audio_prediction(audio_features):
                            custom_objects = {'AttentionLayer': AttentionLayer},
                            compile = False)
 
-        predictions = model.predict(audio_features)
+        predictions = arrange_array(model.predict(audio_features))
 
         pred_idx = np.argmax(predictions, axis = 1)
         emotions = encoder.inverse_transform(pred_idx)
@@ -38,3 +38,15 @@ def audio_prediction(audio_features):
     except Exception as ex:
         print('Unexpected Error during audio inference : ', ex)
         raise
+
+def arrange_array(vector):
+    vector = [
+        vector[0],
+        vector[1],
+        vector[2],
+        vector[3],
+        vector[5],  # sad
+        vector[4],  # neutral
+    ]
+
+    return vector

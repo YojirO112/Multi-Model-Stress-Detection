@@ -67,9 +67,9 @@ def map_stress_level(stress_vector):
     stress_score = (0.7 * np.mean(stress_vector) + 0.3 * np.max(stress_vector))
 
     # map level
-    if stress_score < 0.4:
+    if stress_score < 0.5:
         stress_level = 'LOW'
-    elif stress_score < 0.7:
+    elif stress_score < 0.8:
         stress_level =  'MEDIUM'
     else:
         stress_level = 'HIGH'

@@ -106,7 +106,7 @@ def aggregate_image_vectors(image_vectors):
         raise
 
 # align audio and image vectors based by time window
-def windowed_fusion(audio_vectors, image_vectors, fps = 1, segment_duration = 2):
+def windowed_fusion(audio_vectors, image_vectors, fps = 1, segment_duration = 3):
     try:
         print('Executing windowed fusion ....')
 
@@ -116,7 +116,7 @@ def windowed_fusion(audio_vectors, image_vectors, fps = 1, segment_duration = 2)
         len_audio = len(audio_vectors)
         len_image = len(image_vectors)
 
-        # 1 fps * 2 segment duration = 2 images per window
+        # 1 fps * 3 segment duration = 3 images per window
         images_per_window = fps * segment_duration
 
         stress_vectors = []
