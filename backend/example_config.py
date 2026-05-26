@@ -1,6 +1,6 @@
 # image train directory
-image_train_dir = r"---- provide path here ----"
-image_test_dir = r"---- provide path here ----"
+image_train_dir = r"C:\Users\akash\Downloads\archive (1)\train"
+image_test_dir = r"C:\Users\akash\Downloads\archive (1)\test"
 
 # audio train dir
 audio_dir = r"---- provide path of audio dir here ----"
@@ -18,10 +18,10 @@ image_store_dir = r"---- provide path here ----"
 audio_model_path = r"---- provide audio saving keras model path here ----"
 
 # saved image model after training
-image_model_path = r"---- provide image saving keras model path here ----"
+image_model_path = r"C:\Users\akash\OneDrive\Desktop\python_research\Multi-Model-Stress-Detection\saved_model\image_model.keras"
 
 # trained label encoder path for model inference
 audio_encoder_path = r"---- provide trained scaler pkl path here for audio model inference ----"
 
 # trained emotion class for model inference
-image_emotion_class_path = r"---- provide image emotion class pkl path for image model inference ----"
+image_emotion_class_path = r"C:\Users\akash\OneDrive\Desktop\python_research\Multi-Model-Stress-Detection\saved_model\image_emotion_class.pkl"

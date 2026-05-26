@@ -116,7 +116,7 @@ def train_model():
         model.fit(
             train_gen,
             validation_data=test_gen,
-            epochs = 40,
+            epochs = 15,
             class_weight=class_weights,
             callbacks=[early_stop, lr_scheduler]
         )
@@ -137,7 +137,7 @@ def train_model():
         history = model.fit(
             train_gen,
             validation_data=test_gen,
-            epochs=80,
+            epochs=15,
             class_weight=class_weights,
             callbacks=[early_stop, lr_scheduler]
         )

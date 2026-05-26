@@ -1,5 +1,7 @@
 import numpy as np
-from keras.src.applications.efficientnet import EfficientNetB0
+from tensorflow.keras.applications.efficientnet import EfficientNetB0
+# from tensorflow.keras.applications import EfficientNetV2B0
+
 
 from tensorflow.keras import models, layers, regularizers
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
@@ -18,11 +20,14 @@ def build_image_model(input_shape, num_classes):
     l2_reg = 0.0001
 
     #  Backbone
+        #  Backbone
     base_model = EfficientNetB0(
         input_shape=input_shape,
         include_top=False,
         weights='imagenet'
     )
+
+
 
     base_model.trainable = False
 
@@ -146,3 +151,6 @@ def train_image_model():
     except Exception as ex:
         print('Unexpected error while training image model:', ex)
         raise
+
+if __name__ == "__main__":
+    train_image_model()

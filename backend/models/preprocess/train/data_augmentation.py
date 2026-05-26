@@ -1,3 +1,4 @@
+from sklearn.utils import shuffle
 import joblib
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.efficientnet import preprocess_input
@@ -43,6 +44,8 @@ def image_generator():
         batch_size = batch,
         class_mode = "categorical",
         classes = emotion_class
+        # shuffle=False,
+        # seed=42
     )
 
     # saving emotion class mapping for  inference
@@ -54,7 +57,8 @@ def image_generator():
         target_size = img_size,
         batch_size = batch,
         class_mode = "categorical",
-        classes = emotion_class
+        classes = emotion_class,
+        shuffle=False
     )
 
     return train_gen, test_gen
