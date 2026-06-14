@@ -19,7 +19,12 @@ def image_prediction(image_features):
         predictions = model.predict(image_features)
 
         pred_idx = np.argmax(predictions, axis=1)
-        emotions = [emotion_class[pred_idx[i]] for i in pred_idx]
+        # # emotions = [emotion_class[pred_idx[i]] for i in pred_idx]
+        # emotions = [emotion_class[idx] for idx in pred_idx]
+                # Invert the dictionary to map index -> emotion name
+        emotion_labels = {v: k for k, v in emotion_class.items()}
+        emotions = [emotion_labels[idx] for idx in pred_idx]
+
         confidences = np.max(predictions, axis=1)
 
         print('image prediction results \n\n')

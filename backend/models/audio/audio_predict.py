@@ -53,4 +53,6 @@ def arrange_array(vectors):
 
         arranged.append(new_vector)
 
-    return vector
+    # return vector
+
+    return np.array(arranged)

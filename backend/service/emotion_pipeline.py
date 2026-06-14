@@ -75,3 +75,6 @@ def map_stress_level(stress_vector):
         stress_level = 'HIGH'
 
     return stress_score, stress_level
+
+if __name__ == "__main__":
+    process_video_emotion_pipeline()

@@ -5,7 +5,7 @@ from pathlib import Path
 from backend.config import image_store_dir
 
 # extract images from video using ffmpeg
-def extract_images(video_path, fps = 3):
+def extract_images(video_path, fps = 1):
     try:
         print('Extracting images ....')
 
